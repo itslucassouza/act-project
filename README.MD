@@ -4,6 +4,9 @@ Full-stack application with NestJS backend and NextJS frontend.
 
 ### Images
 
+![Front](./assets/image1.png)
+![Front](./assets/image2.png)
+
 ## Quick Start
 
 ### Prerequisites
