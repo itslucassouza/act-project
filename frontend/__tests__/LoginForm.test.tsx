@@ -1,9 +1,18 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { LoginForm } from "@/components/auth/LoginForm";
 import "@testing-library/jest-dom";
+import { LoginForm } from "@/components/auth/LoginForm";
 
 const mockSubmit = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+}));
 
 const baseProps = {
   onSubmit: mockSubmit,
