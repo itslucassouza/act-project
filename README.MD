@@ -23,7 +23,6 @@ Full-stack application with NestJS backend and NextJS frontend.
 
    ```bash
    cd backend
-   Create a .env file with the following content:
    ```
 
 2. env:
@@ -49,11 +48,10 @@ Full-stack application with NestJS backend and NextJS frontend.
    pnpm run start:dev
    ```
 6. Init prisma
-   ````bash
+   ```bash
    npx prisma migrate deploy
-    ```
+   ```
    The backend will be running on port 3001.
-   ````
 
 Frontend Setup
 
