@@ -35,9 +35,9 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @Delete(':email')
+  remove(@Param('email') email: string) {
+    return this.usersService.delete(email);
   }
 
   @Get('test-cache')

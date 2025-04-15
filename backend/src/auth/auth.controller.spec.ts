@@ -1,4 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
@@ -7,19 +10,26 @@ import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
   let usersService: UsersService;
-  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         AuthService,
-        UsersService,
+        {
+          provide: UsersService,
+          useValue: {
+            create: jest.fn(),
+            findOne: jest.fn(),
+          },
+        },
         {
           provide: JwtService,
           useValue: {
@@ -27,23 +37,28 @@ describe('AuthController', () => {
           },
         },
         {
-          provide: UsersService,
+          provide: PrismaService,
           useValue: {
-            create: jest.fn(),
-            login: jest.fn(),
+            user: {
+              findUnique: jest.fn(),
+              create: jest.fn(),
+            },
+          },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn(),
+            del: jest.fn(),
           },
         },
       ],
     }).compile();
 
+    usersService = module.get<UsersService>(UsersService);
     authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
-    usersService = module.get<UsersService>(UsersService);
-    jwtService = module.get<JwtService>(JwtService); // Aqui você pega o JwtService
-  });
-
-  it('should be defined', () => {
-    expect(authController).toBeDefined();
   });
 
   it('should be defined', () => {
@@ -60,6 +75,7 @@ describe('AuthController', () => {
       };
 
       const mockUser = { id: 1, ...createUserDto };
+
       jest.spyOn(usersService, 'create').mockResolvedValue(mockUser);
 
       const result = await authController.register(createUserDto);
@@ -76,9 +92,18 @@ describe('AuthController', () => {
         password: 'password123',
       };
 
-      const mockUser = { id: 1, name: 'John Doe', email: loginDto.email };
+      const mockUser = {
+        id: 1,
+        name: 'John Doe',
+        email: loginDto.email,
+        password: 'hashedPassword',
+      };
 
-      jest.spyOn(authService, 'validateUser').mockResolvedValue(mockUser);
+      jest.spyOn(authService, 'validateUser').mockResolvedValue({
+        id: mockUser.id,
+        name: mockUser.name,
+        email: mockUser.email,
+      });
 
       const mockResponse = {
         access_token: 'jwt-token',
@@ -92,7 +117,11 @@ describe('AuthController', () => {
         loginDto.email,
         loginDto.password,
       );
-      expect(authService.login).toHaveBeenCalledWith(mockUser);
+      expect(authService.login).toHaveBeenCalledWith({
+        id: mockUser.id,
+        name: mockUser.name,
+        email: mockUser.email,
+      });
     });
 
     it('should throw an error if login fails', async () => {

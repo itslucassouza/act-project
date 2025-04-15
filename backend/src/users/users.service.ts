@@ -99,13 +99,8 @@ export class UsersService {
     return updatedUser;
   }
 
-  async remove(id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    await this.prisma.user.delete({ where: { id } });
+  async delete(email: string) {
+    const user = await this.prisma.user.delete({ where: { email } });
 
     await this.cacheManager.del(`user_${user.email}`);
     await this.cacheManager.del('users_all');

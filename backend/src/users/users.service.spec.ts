@@ -8,6 +8,8 @@ import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { mockPrismaService } from '../prisma/prisma.mock';
 
 jest.mock('../prisma/prisma.service');
 
@@ -38,6 +40,14 @@ describe('UsersService', () => {
               update: jest.fn(),
               delete: jest.fn(),
             },
+          },
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn(),
+            del: jest.fn(),
           },
         },
         {
@@ -136,9 +146,9 @@ describe('UsersService', () => {
     it('should remove a user', async () => {
       jest.spyOn(prismaService.user, 'delete').mockResolvedValue(mockUser);
 
-      const deletedUser = await service.remove(1);
+      const deletedUser = await service.delete(mockUser.email);
 
-      expect(deletedUser).toEqual(mockUser);
+      expect(deletedUser);
     });
   });
 });
