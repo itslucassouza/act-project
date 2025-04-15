@@ -1,8 +1,7 @@
-// components/auth/SignupForm.tsx
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupFormSchema, SignupFormValues } from "@/lib/schemas/auth-schema"; // Importando o schema Zod
+import { signupFormSchema, SignupFormValues } from "@/lib/schemas/auth-schema";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 

@@ -1,4 +1,3 @@
-// lib/schemas/auth-schema.ts
 import * as z from "zod";
 
 export const loginFormSchema = z.object({
