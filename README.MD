@@ -1,6 +1,8 @@
 # Project Name
 
-Full-stack application with NestJS backend and [Frontend Framework] frontend.
+Full-stack application with NestJS backend and NextJS frontend.
+
+### Images
 
 ## Quick Start
 
@@ -21,101 +23,82 @@ Full-stack application with NestJS backend and [Frontend Framework] frontend.
    Create a .env file with the following content:
    ```
 
-env
-Copiar
-Editar
-DATABASE_URL="postgresql://act:act123@localhost:5432/nestjs_prisma?schema=public"
-Run Docker Compose to start the database:
+2. env:
 
-bash
-Copiar
-Editar
-docker-compose up -d
-Install the backend dependencies:
+```bash
+  DATABASE_URL="postgresql://act:act123@localhost:5432/nestjs_prisma?
+  JWT_SECRET=12344
+  JWT_EXPIRATION=1h
+```
 
-bash
-Copiar
-Editar
-pnpm install
-Start the backend development server:
+3. Run Docker Compose to start the database and init prisma:
 
-bash
-Copiar
-Editar
-pnpm run start:dev
-The backend will be running on port 3001.
+```bash
+ docker-compose up -d
+```
+
+4. Install the backend dependencies:
+   ```bash
+   pnpm install
+   ```
+5. Start the backend development server:
+   ```bash
+   pnpm run start:dev
+   ```
+6. Init prisma
+   ````bash
+   npx prisma migrate deploy
+    ```
+   The backend will be running on port 3001.
+   ````
 
 Frontend Setup
-Navigate to the frontend folder:
 
-bash
-Copiar
-Editar
-cd frontend
-Install the frontend dependencies:
+1. Navigate to the frontend folder and install:
 
-bash
-Copiar
-Editar
-pnpm install
-Start the frontend development server:
+   ```bash
+    cd frontend
+    pnpm install
+   ```
 
-bash
-Copiar
-Editar
-pnpm run dev
+2. Start the frontend development server:
+   ```bash
+    pnpm run dev
+   ```
+
 The frontend will be running on port 3000.
 
-Docker Configuration
-The docker-compose.yml configuration for the PostgreSQL database is as follows:
+### Docker Configuration
 
-yaml
-Copiar
-Editar
-version: '3.8'
+1. The docker-compose.yml configuration for the PostgreSQL database is as follows:
 
-services:
-db:
-image: postgres:13
-container_name: postgres_db
-environment:
-POSTGRES_USER: act
-POSTGRES_PASSWORD: act123
-POSTGRES_DB: nestjs_prisma
-ports: - '5432:5432'
-volumes: - postgres_data:/var/lib/postgresql/data
-networks: - backend
+   ```
+   version: '3.8'
 
-volumes:
-postgres_data:
+   services:
+   db:
+       image: postgres:13
+       container_name: postgres_db
+       environment:
+       POSTGRES_USER: act
+       POSTGRES_PASSWORD: act123
+       POSTGRES_DB: nestjs_prisma
+       ports:
+       - '5432:5432'
+       volumes:
+       - postgres_data:/var/lib/postgresql/data
+       networks:
+       - backend
 
-networks:
-backend:
-driver: bridge
-Command Reference
-Backend
-Command Description
-pnpm run start:dev Start dev server
-pnpm run build Create production build
-pnpm run start:prod Run production build
-Frontend
-Command Description
-pnpm run dev Start dev server
-pnpm run build Create production build
-🔌 Ports
-Service Port
-Backend API 3001
-Frontend App 3000
-PostgreSQL 5432
-💡 Tips
-Use pnpm v9.0.6 for both frontend and backend.
+       volumes:
+       postgres_data:
 
-The database persists data via Docker volume.
+       networks:
+       backend:
+           driver: bridge
+   ```
 
-Ensure Docker is running before starting the backend.
-
-📝 License
-MIT or [Your License Here]
+`version: '3.8'`
 
 How to use this:
 Copy ALL the text above (from # Project Name to the end).
