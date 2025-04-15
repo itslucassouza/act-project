@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -50,7 +51,7 @@ export class AuthController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    const { password, ...result } = user;
+    const { ...result } = user;
     return result;
   }
 }

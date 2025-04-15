@@ -25,8 +25,8 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('email') email: string) {
+  @Get(':email')
+  async findOne(@Param('email') email: string) {
     return this.usersService.findOne(email);
   }
 
@@ -38,5 +38,10 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Get('test-cache')
+  async testCache() {
+    return this.usersService.testCache();
   }
 }
