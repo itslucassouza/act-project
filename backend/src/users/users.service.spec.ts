@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable prettier/prettier */
+
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -99,24 +99,6 @@ describe('UsersService', () => {
     });
   });
 
-  describe('login', () => {
-    it('should throw an error if user is not found', async () => {
-      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(null);
-
-      await expect(
-        service.login('nonexistent@example.com', 'password123'),
-      ).rejects.toThrowError(new Error('user not found'));
-    });
-
-    it('should throw an error if password is invalid', async () => {
-      jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
-
-      await expect(
-        service.login('john@example.com', 'wrongpassword'),
-      ).rejects.toThrowError(new Error('invalid password'));
-    });
-  });
-
   describe('findAll', () => {
     it('should return an array of users', async () => {
       jest.spyOn(prismaService.user, 'findMany').mockResolvedValue([mockUser]);
@@ -128,10 +110,10 @@ describe('UsersService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a user by id', async () => {
+    it('should return a user by email', async () => {
       jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(mockUser);
 
-      const user = await service.findOne(1);
+      const user = await service.findOne(mockUser.email);
 
       expect(user).toEqual(mockUser);
     });

@@ -8,15 +8,11 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   private async hashPassword(password: string): Promise<string> {
     const saltOrRounds = 10;
@@ -47,41 +43,12 @@ export class UsersService {
     return user;
   }
 
-  private async comparePasswords(
-    password: string,
-    hash: string,
-  ): Promise<boolean> {
-    return await bcrypt.compare(password, hash);
-  }
-
-  async login(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new Error('user not found');
-    }
-
-    const isPasswordValid = await this.comparePasswords(
-      password,
-      user.password,
-    );
-
-    if (!isPasswordValid) {
-      throw new Error('invalid password');
-    }
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
-
-    return { name: user.name, token };
-  }
-
   findAll() {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
+  findOne(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
   }
 
   update(id: number, data: UpdateUserDto) {
