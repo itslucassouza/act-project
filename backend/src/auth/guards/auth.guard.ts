@@ -1,4 +1,3 @@
-// src/auth/guards/auth.guard.ts
 import {
   Injectable,
   CanActivate,

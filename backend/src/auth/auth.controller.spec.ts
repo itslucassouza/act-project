@@ -23,7 +23,7 @@ describe('AuthController', () => {
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn().mockReturnValue('jwt-token'), // Mock para o método sign()
+            sign: jest.fn().mockReturnValue('jwt-token'),
           },
         },
         {
